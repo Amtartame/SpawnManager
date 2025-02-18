@@ -20,16 +20,44 @@ import java.util.List;
 
 public class LocationCommands implements TabExecutor {
 
+    /**
+     * A final instance of {@link LocationManager} used to manage named locations within the
+     * {@link LocationCommands} class. It provides functionality for registering, retrieving,
+     * manipulating, and teleporting to specific locations, as well as persisting location data.
+     * This instance is injected through the constructor and remains constant throughout the
+     * lifecycle of the containing class.
+     */
     private final LocationManager locationManager;
+    /**
+     * Manages cooldowns for specific player actions within the LocationCommands class.
+     * This variable holds an instance of {@code CooldownManager}, which is responsible
+     * for tracking and enforcing cooldown periods to prevent repeated actions during
+     * a specified timeframe. It is initialized as final to ensure immutability.
+     */
     private final CooldownManager cooldownManager;
 
+    /**
+     * Constructs a new instance of the LocationCommands class, initializing it with a LocationManager
+     * and creating a CooldownManager based on the teleport delay settings from the configuration.
+     *
+     * @param locationManager the LocationManager instance used to manage locations. Must not be null.
+     */
     public LocationCommands(LocationManager locationManager) {
         this.locationManager = locationManager;
-        // Lit le cooldown depuis la config (valeur en secondes, par défaut 10 sec)
         long cooldownSeconds = Main.getInstance().getConfig().getLong("settings.teleport_delay", 10);
         this.cooldownManager = new CooldownManager(Main.getInstance(), cooldownSeconds);
     }
 
+    /**
+     * Handles the execution of commands for this plugin, delegating actions
+     * to appropriate helper methods based on the specific command issued.
+     *
+     * @param sender the entity that issued the command, such as a player or the console
+     * @param cmd the command being executed
+     * @param label the alias of the command that was used
+     * @param args any additional command arguments provided
+     * @return true always, indicating the command was handled
+     */
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
 
@@ -43,7 +71,12 @@ public class LocationCommands implements TabExecutor {
     }
 
     /**
-     * Gestion de la commande /spawn (accessible à tous avec cooldown).
+     * Handles the execution of the "/spawn" command, which teleports a player to a predefined spawn location,
+     * with cooldown management to prevent repeated usage within a short period.
+     *
+     * @param sender the {@link CommandSender} executing the command, which must be an instance of {@link Player}.
+     *               If the sender is not a player, an error message is sent and the command execution is stopped.
+     * @param args   the arguments provided with the command. For this implementation, no specific arguments are required.
      */
     private void handleSpawnCommand(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
@@ -71,7 +104,13 @@ public class LocationCommands implements TabExecutor {
     }
 
     /**
-     * Gestion de la commande /location avec ses sous-commandes.
+     * Handles the "/location" command, providing functionality for location management,
+     * including creation, updating, deletion, teleportation to locations, and listing.
+     * The command also includes administrative sub-commands for saving and loading locations.
+     *
+     * @param sender The entity (player, console, etc.) that executed the command. Must not be null.
+     * @param args An array of command arguments provided by the sender. The first argument determines
+     *             the sub-command, additional arguments may be required depending on the sub-command.
      */
     private void handleLocationCommand(@NotNull CommandSender sender, String[] args) {
         if (!sender.hasPermission("spawnmanager.location.use")) {
@@ -223,7 +262,9 @@ public class LocationCommands implements TabExecutor {
     }
 
     /**
-     * Affiche l'aide pour /location et /spawn.
+     * Sends the help menu with a list of available commands and their usage to the specified CommandSender.
+     *
+     * @param sender the CommandSender (e.g., a player or console) to whom the help message should be sent
      */
     private void sendHelp(CommandSender sender) {
         sender.sendMessage(Component.text("Utilisation des commandes :", NamedTextColor.GOLD));
@@ -238,6 +279,16 @@ public class LocationCommands implements TabExecutor {
                 + " sec).", NamedTextColor.YELLOW));
     }
 
+    /**
+     * Handles the tab completion for commands managed by this class.
+     * Provides command suggestions based on the current input and command context.
+     *
+     * @param sender the source of the command, typically a player or the console
+     * @param cmd the command being executed for which tab completion is requested
+     * @param label the alias used for the command
+     * @param args the arguments already provided for the command
+     * @return a list of possible completions for the current input, or an empty list if no completions are available
+     */
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
         String commandName = cmd.getName().toLowerCase();
