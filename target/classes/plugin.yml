@@ -1,0 +1,7 @@
+name: SpawnManager
+version: '1.0-SNAPSHOT'
+main: akia.spawnManager.Main
+api-version: '1.21'
+commands:
+  location:
+  spawn:

@@ -1,0 +1,7 @@
+# Configuration du SpawnManager
+
+settings:
+  teleport_delay: 10
+  spawn_cooldown: spawn
+
+

@@ -1,0 +1,9 @@
+akia\spawnManager\Event\PlayerConnection.class
+akia\spawnManager\manager\LocationManager.class
+akia\spawnManager\builder\LocationBuilder.class
+akia\spawnManager\manager\CooldownManager$1.class
+akia\spawnManager\manager\CooldownManager.class
+akia\spawnManager\listener\Commands.class
+akia\spawnManager\command\LocationCommands.class
+akia\spawnManager\Main.class
+akia\spawnManager\listener\Events.class
